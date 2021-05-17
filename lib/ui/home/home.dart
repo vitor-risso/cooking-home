@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cooking_home/ui/details/details.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/recipe.dart';
@@ -35,28 +36,35 @@ class HomeState extends State<Home> {
               itemBuilder: (BuildContext context, int index) {
                 Recipe recipe = Recipe.fromJson(recipes[index]);
 
-                return _buildCard(recipe.titulo, recipe.foto);
+                return _buildCard(recipe);
               },
               itemCount: recipes == null ? 0 : recipes.length);
         });
   }
 
-  Widget _buildCard(titulo, foto) {
-    return SizedBox(
-        height: 300,
-        child: Card(
-            margin: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    _buildCardImage(foto),
-                    _buildCardGradient(),
-                    _buildCardText(titulo)
-                  ],
-                )
-              ],
-            )));
+  Widget _buildCard(recipe) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context) => Details(recipe: recipe )
+            ));
+      },
+      child: SizedBox(
+          height: 300,
+          child: Card(
+              margin: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      _buildCardImage(recipe.foto),
+                      _buildCardGradient(),
+                      _buildCardText(recipe.titulo)
+                    ],
+                  )
+                ],
+              ))),
+    );
   }
 
   Widget _buildCardGradient() {
