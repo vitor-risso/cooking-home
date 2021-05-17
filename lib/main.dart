@@ -1,3 +1,4 @@
+import 'package:cooking_home/ui/home/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -21,30 +22,6 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.yellow,
         ),
-        home: Scaffold(
-          body: SizedBox(
-              height: 300,
-              child: Card(
-                margin: EdgeInsets.all(16),
-                  child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Image.network(
-                        'https://i.ytimg.com/vi/o-Yyc7k7gao/maxresdefault.jpg',
-                        fit: BoxFit.fill,
-                        height: 268,
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        child: Text("Bolo de trigo", style: TextStyle(fontSize: 20),),
-                      )
-                    ],
-                  )
-                ],
-              ))),
-          appBar: AppBar(title: Text("Cozinhando em casa")),
-        ));
+        home: Home());
   }
 }
