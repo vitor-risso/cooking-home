@@ -1,6 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+import '../../models/recipe.dart';
+
+class Home extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new HomeState();
+  }
+}
+
+class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return _buildHome();
@@ -8,12 +19,29 @@ class Home extends StatelessWidget {
 
   Widget _buildHome() {
     return Scaffold(
-      body: _buildCard(),
+      body: _buildCardList(),
       appBar: _buildAppBar(),
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildCardList() {
+    return FutureBuilder(
+        future:
+            DefaultAssetBundle.of(context).loadString('assets/receitas.json'),
+        builder: (context, snapshot) {
+          List<dynamic> recipes = json.decode(snapshot.data.toString());
+
+          return ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                Recipe recipe = Recipe.fromJson(recipes[index]);
+
+                return _buildCard(recipe.titulo, recipe.foto);
+              },
+              itemCount: recipes == null ? 0 : recipes.length);
+        });
+  }
+
+  Widget _buildCard(titulo, foto) {
     return SizedBox(
         height: 300,
         child: Card(
@@ -21,26 +49,41 @@ class Home extends StatelessWidget {
             child: Column(
               children: [
                 Stack(
-                  children: [_buildCardImage(), _buildCardText()],
+                  children: [
+                    _buildCardImage(foto),
+                    _buildCardGradient(),
+                    _buildCardText(titulo)
+                  ],
                 )
               ],
             )));
   }
 
-  Widget _buildCardText() {
+  Widget _buildCardGradient() {
+    return Container(
+      height: 268,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              colors: [Colors.transparent, Colors.yellow.withOpacity(0.7)])),
+    );
+  }
+
+  Widget _buildCardText(titulo) {
     return Positioned(
       bottom: 10,
       left: 10,
       child: Text(
-        "Bolo de trigo",
-        style: TextStyle(fontSize: 20),
+        titulo,
+        style: TextStyle(fontSize: 20, color: Colors.white),
       ),
     );
   }
 
-  Widget _buildCardImage() {
-    return Image.network(
-      'https://i.ytimg.com/vi/o-Yyc7k7gao/maxresdefault.jpg',
+  Widget _buildCardImage(foto) {
+    return Image.asset(
+      foto,
       fit: BoxFit.fill,
       height: 268,
     );
